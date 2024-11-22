@@ -27,6 +27,7 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 
 import com.android.internal.util.crdroid.Utils;
+import com.android.launcher3.AppFilter;
 import com.android.launcher3.lineage.trust.db.TrustComponent;
 
 import java.util.ArrayList;
@@ -42,6 +43,9 @@ public class LoadTrustComponentsTask extends AsyncTask<Void, Integer, List<Trust
     private PackageManager mPackageManager;
 
     @NonNull
+    private AppFilter mAppFilter;
+
+    @NonNull
     private Callback mCallback;
 
     @NonNull
@@ -49,10 +53,12 @@ public class LoadTrustComponentsTask extends AsyncTask<Void, Integer, List<Trust
 
     LoadTrustComponentsTask(@NonNull AppLockHelper appLockHelper,
             @NonNull PackageManager packageManager,
+            @NonNull AppFilter appFilter,
             @NonNull Callback callback,
             @NonNull Context context) {
         mAppLockHelper = appLockHelper;
         mPackageManager = packageManager;
+        mAppFilter = appFilter;
         mCallback = callback;
         mContext = context;
     }
@@ -68,6 +74,10 @@ public class LoadTrustComponentsTask extends AsyncTask<Void, Integer, List<Trust
         List<String> launchablePackages = Utils.launchablePackages(mContext);
         List<String> whiteListedPackages = Arrays.asList(mContext.getResources().getStringArray(
                 com.android.internal.R.array.config_appLockAllowedSystemApps));
+
+            if (!mAppFilter.shouldShowApp(app.activityInfo.getComponentName())) {
+                continue;
+            }
 
         for (int i = 0; i < numPackages; i++) {
             PackageInfo app = apps.get(i);
