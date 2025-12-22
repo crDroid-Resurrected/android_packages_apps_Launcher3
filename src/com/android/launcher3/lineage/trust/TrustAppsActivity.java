@@ -37,7 +37,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.launcher3.AppFilter;
 import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherPrefs;
 import com.android.launcher3.R;
@@ -85,8 +84,7 @@ public class TrustAppsActivity extends Activity implements
 
         showOnBoarding(false);
 
-        final AppFilter appFilter = new AppFilter(this);
-        new LoadTrustComponentsTask(mDbHelper, getPackageManager(), appFilter, this).execute();
+        new LoadTrustComponentsTask(mAppLockHelper, getPackageManager(), this, this).execute();
     }
 
     @Override
